@@ -19,8 +19,9 @@ ClassMethod displayHeader()
 			<title>Тестирование веб приложений в среде Intersystems Cache</title>
 			<link rel="shortcut icon" type="image/x-icon" href="https://s3.amazonaws.com/thinkific-import/162126/G3YCO419QT21mxUPL3Yw_favicon.png" />
 			<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-			<link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+			<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+			<script type="text/javascript" src="js/main.js"></script>
 			<style>
 				BODY {margin: 20px}
 			</style>
@@ -96,6 +97,7 @@ ClassMethod displayUsersHtml(users)
 		<div class="card" style="width: auto;">
 		<div class="card-header">Users</div>
 		<div class="card-body">
+		<button class="btn btn-primary" onclick="request()" style="margin: 0 0 1em 0em"> Test Request </button>
 		<table border=1 cellpadding=7 cellspacing=7>
 		<thead>
 			<th>ID</th>
@@ -103,6 +105,7 @@ ClassMethod displayUsersHtml(users)
 			<th>Age</th>
 			<th>Company</th>
 		</thead>
+		<tbody id="usersTable">
 		<div class="col-2">
 	>
 	
@@ -121,6 +124,7 @@ ClassMethod displayUsersHtml(users)
 	} while userId
 	
 	&HTML<
+		</tbody>
 		</table>
 		</div>
 		</div>
