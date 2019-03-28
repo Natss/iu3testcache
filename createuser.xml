@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2017.2 (Build 744U)" ts="2019-03-22 08:03:50">
+<Class name="Company.Company">
+<Description>
+Компании</Description>
+<Super>%Persistent</Super>
+<TimeChanged>65094,28168.301856</TimeChanged>
+<TimeCreated>65093,71475.246025</TimeCreated>
+
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="inn">
+<Type>%Integer</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Company.CompanyD</DataLocation>
+<DefaultData>CompanyDefaultData</DefaultData>
+<IdLocation>^Company.CompanyD</IdLocation>
+<IndexLocation>^Company.CompanyI</IndexLocation>
+<StreamLocation>^Company.CompanyS</StreamLocation>
+<Data name="CompanyDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>inn</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+
+
+<Class name="Company.Users">
+<Description>
+all users</Description>
+<Super>%Persistent</Super>
+<TimeChanged>65086,69602.446943</TimeChanged>
+<TimeCreated>65079,72423.084635</TimeCreated>
+
+<Property name="name">
+<Type>%String</Type>
+</Property>
+
+<Property name="age">
+<Type>%Numeric</Type>
+</Property>
+
+<Property name="sex">
+<Type>%Numeric</Type>
+</Property>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^Company.UsersD</DataLocation>
+<DefaultData>UsersDefaultData</DefaultData>
+<IdLocation>^Company.UsersD</IdLocation>
+<IndexLocation>^Company.UsersI</IndexLocation>
+<StreamLocation>^Company.UsersS</StreamLocation>
+<Data name="UsersDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>name</Value>
+</Value>
+<Value name="3">
+<Value>age</Value>
+</Value>
+<Value name="4">
+<Value>sex</Value>
+</Value>
+<Value name="5">
+<Value>Height</Value>
+</Value>
+</Data>
+</Storage>
+
+<Method name="createUser">
+<FormalSpec>name:%String,age:%Numeric,sex:%Numeric</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set ##this.name = name
+	set ##this.age = age
+	set ##this.sex = sex
+	set result = ##this.%Save()
+	quit result
+]]></Implementation>
+</Method>
+
+<Method name="getUsers">
+<FormalSpec>data</FormalSpec>
+<ReturnType>%String</ReturnType>
+<Implementation><![CDATA[
+	set data = ""
+	&sql(
+	 	DECLARE MyCursor CURSOR FOR
+	    SELECT id, name, age, sex
+	    INTO :id, :name, :age, :sex
+	    FROM Company.Users
+ 	)
+ 	//вариант в массив INTO :singleUserData()
+ 	&sql(OPEN MyCursor)
+ 	
+    FOR { 
+   		&sql(FETCH MyCursor)
+        if (SQLCODE) quit
+        
+        set data(id) = $ListBuild(id, name, age, sex)
+ 	}
+ 	&sql(CLOSE MyCursor)
+ 	
+ 	quit
+]]></Implementation>
+</Method>
+
+<UDLText name="T">
+<Content><![CDATA[
+// Property Height As %String [ Required ];
+
+]]></Content>
+</UDLText>
+</Class>
+
+
+<Project name="users" LastModified="2019-03-22 08:02:36.137775">
+  <Items>
+    <ProjectItem name="Company.Company" type="CLS"></ProjectItem>
+    <ProjectItem name="Company.Users" type="CLS"></ProjectItem>
+    <ProjectItem name="web.createuser" type="CLS"></ProjectItem>
+  </Items>
+</Project>
+
+
+<Class name="web.createuser">
+<Super>%CSP.Page</Super>
+<TimeChanged>65093,74626.92863</TimeChanged>
+<TimeCreated>65079,72022.990639</TimeCreated>
+
+<Method name="OnPage">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	write "<html>"
+	do ..displayHeader()
+	do ..displayBody()
+	write "</html>"
+
+	Quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="displayHeader">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	&HTML<
+		<head>
+			<title>Тестирование веб приложений в среде Intersystems Cache</title>
+			<link rel="shortcut icon" type="image/x-icon" href="https://s3.amazonaws.com/thinkific-import/162126/G3YCO419QT21mxUPL3Yw_favicon.png" />
+			<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+			<link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+			<style>
+				BODY {margin: 20px}
+			</style>
+		</head>
+	>
+]]></Implementation>
+</Method>
+
+<Method name="displayBody">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	&html<
+		<body>
+		<div class="container">
+		<div class="row">
+	>
+	do ..displayForm()
+ 	
+ 	do ..displayUsers()
+ 	
+ 	&html<
+ 		</div>
+ 		</div>
+ 		</body>
+ 	>
+]]></Implementation>
+</Method>
+
+<Method name="checkSaveFormData">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+ 	set fromfield = %request.Get("fromfield")
+ 	if (fromfield){
+		//write ..createUserObject()
+		set result = ..saveAsInsert()
+		if (result){
+			&html<
+				<div class="alert alert-success" role="alert">
+				Сохранено успешно
+				</div>
+			>
+		}
+		else{
+			&html<
+				<div class="alert alert-danger" role="alert">
+				#(result)#
+				</div>
+			>
+			
+		}
+ 	}
+]]></Implementation>
+</Method>
+
+<Method name="createUserObject">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set result = ..saveObject()
+	if (result) {
+		set createResult = "ОК"
+	}
+	else {
+		set createResult = ##class(%SYSTEM.Status).GetErrorText(result)
+	}
+	return createResult
+]]></Implementation>
+</Method>
+
+<Method name="displayUsers">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set userObj = ##class(Company.Users).%New()
+	do userObj.getUsers(.users)
+	zwrite users
+	do ..displayUsersHtml(.users)
+]]></Implementation>
+</Method>
+
+<Method name="displayUsersHtml">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>users</FormalSpec>
+<Implementation><![CDATA[
+	&HTML<
+		<div class="col-4">
+		<div class="card" style="width: 18rem;">
+		<div class="card-header">Users</div>
+		<div class="card-body">
+		<div class="col-8">
+		<table border=1 cellpadding=7 cellspacing=7>
+	>
+	
+	set userId = ""
+	set userdata = ""
+	do {
+		write "<tr>"
+		set userId=$Order(users(userId), 1, userdata) 
+		if (userId){
+			write "<td>"_$List(userdata,1)_"</td>"
+			write "<td>"_$List(userdata,2)_"</td>"
+			write "<td>"_$List(userdata,3)_"</td>"
+			write "<td>"_$List(userdata,4)_"</td>"
+			write "</tr>"
+		}
+	} while userId
+	
+	&HTML<
+		</table>
+		</div>
+		</div>
+		</div>
+		
+
+	>
+]]></Implementation>
+</Method>
+
+<Method name="saveObject">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+ set name = %request.Get("nameField")
+ set sex = %request.Get("sexField")
+ set age = %request.Get("ageField")
+
+ set userObject = ##class(Company.Users).%New()
+ set result = userObject.createUser(name, age, sex)
+ return result
+]]></Implementation>
+</Method>
+
+<Method name="saveAsInsert">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	 set name = %request.Get("nameField")
+	 set sex = %request.Get("sexField")
+	 set age = %request.Get("ageField")
+	 
+	 &sql(insert into Company.Users (name, age, sex) 
+	 	VALUES (:name, :sex, :age))
+	 
+	 if (%ROWCOUNT = 0) {
+		 set result = %msg
+	 }
+	 else {
+		 set result = 1
+	 }
+	 return result
+]]></Implementation>
+</Method>
+
+<Method name="displayForm">
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	&html<
+	<div class="col-4">
+	<div class="card" style="width: 18rem;">
+	<div class="card-header">Create user</div>
+	<div class="card-body">
+	
+	<form METHOD="POST">
+		<input type="hidden" name="fromfield" value="1" />
+		
+		<div class="form-group">
+			<label for="nameField">User name</label>
+			<input type="text" name="nameField" id="nameField" class="form-control" placeholder="User name" >
+		</div>
+		
+		<div class="form-group">
+			<label for="ageField">User age
+			</label><input type="text" name="ageField" class="form-control">
+		</div>
+		
+		<div class="form-group">
+			<label for="sexField">User sex</label>
+			<select name="sexField" class="form-control">
+				<option value="1">Unknown</option>
+				<option value="2">Known but secret</option>
+			</select>
+		</div>
+		
+		<button type="submit" class="btn btn-primary">Сохранить</button>
+	</form>
+	>
+	do ..checkSaveFormData()
+	&html<
+	</div>
+	</div>
+	</div>
+	>
+]]></Implementation>
+</Method>
+</Class>
+</Export>
