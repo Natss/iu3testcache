@@ -3,21 +3,21 @@ Class ajax.users Extends %CSP.Page
 
 ClassMethod OnPage() As %Status
 {
-
-    set data = ..getUsers()    
+    set json = {}.%FromJSON(%request.Content)
+    set data = ..getUsers(json.username)    
     write data.%ToJSON()
     Quit $$$OK
 }
 
-ClassMethod getUsers() As %String
+ClassMethod getUsers(username As %String = "") As %String
 {
     set data = []
     &sql(
         DECLARE MyCursor CURSOR FOR
-        SELECT top 20 id, name, age, sex, company->name 
+        SELECT top 10 id, name, age, sex, company->name 
         INTO :id, :name, :age, :sex, :companyname
         FROM Company.Users
-        WHERE id > 20
+        WHERE name %STARTSWITH :username
         )
         //вариант в массив INTO :singleUserData()
         &sql(OPEN MyCursor)

@@ -16,6 +16,20 @@
 - [errors](http://127.0.0.1:57772/csp/sys/op/UtilSysAppErrors.csp?$ID1=USER&$ID2=03/14/2019&$NAMESPACE=USER)
 - [create user](http://127.0.0.1:57772/csp/user/web.createuser.cls)
 
+# Namespaces
+
+Переключить `namespace` можно в настройках расширения
+
+`USER`
+- web.createuser
+- Company.Users
+- Company.Company
+  
+`COMPANYWEB`
+- ajax.users
+- Company.Users
+- Company.Company
+
 # Окончание работы
 
 Не забыть остановить инстанс, а то потом придется перезагружаться

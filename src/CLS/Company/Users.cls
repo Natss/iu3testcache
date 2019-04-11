@@ -51,8 +51,8 @@ Method getUsers(data) As %String
 	set data = ""
 	&sql(
 	 	DECLARE MyCursor CURSOR FOR
-	    SELECT top 20 id, name, age, sex
-	    INTO :id, :name, :age, :sex
+	    SELECT top 20 id, name, age, sex, company->name
+	    INTO :id, :name, :age, :sex, :companyname
 	    FROM Company.Users
  	)
  	//вариант в массив INTO :singleUserData()
@@ -62,7 +62,14 @@ Method getUsers(data) As %String
    		&sql(FETCH MyCursor)
         if (SQLCODE) quit
         
-        set data(id) = $ListBuild(id, name, age, sex)
+		set data(id) = {
+			"id": (id),
+			"name": (name),
+			"age": (age),
+			"companyname":(companyname),
+			"sex": (sex)
+		}
+		//set data(id) = $ListBuild(id, name, age, sex)
  	}
  	&sql(CLOSE MyCursor)
  	

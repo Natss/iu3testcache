@@ -93,32 +93,36 @@ ClassMethod displayUsers()
 ClassMethod displayUsersHtml(users)
 {
 	&HTML<
-		<div class="col-8">
-		<div class="card" style="width: auto;">
+		<div class="card" style="width: 28rem;">
 		<div class="card-header">Users</div>
 		<div class="card-body">
-		<button class="btn btn-primary" onclick="request()" style="margin: 0 0 1em 0em"> Test Request </button>
-		<table border=1 cellpadding=7 cellspacing=7>
+		<div class="form-group input-group">
+			<input type="text" id="username" class="form-control" placeholder="User name">
+			<button class="btn btn-primary" onclick="request()">Request data</button>
+		</div>
+		<table border=1 cellpadding=7 cellspacing=7 style="width: 100%">
 		<thead>
 			<th>ID</th>
 			<th>Name</th>
 			<th>Age</th>
 			<th>Company</th>
+			<th>&nbsp;</th>
 		</thead>
 		<tbody id="usersTable">
-		<div class="col-2">
 	>
 	
 	set userId = ""
 	set userdata = ""
 	do {
-		write "<tr>"
-		set userId=$Order(users(userId), 1, userdata) 
+		set userId=$Order(users(userId))
 		if (userId){
-			write "<td>"_$List(userdata,1)_"</td>"
-			write "<td>"_$List(userdata,2)_"</td>"
-			write "<td>"_$List(userdata,3)_"</td>"
-			write "<td>"_$List(userdata,4)_"</td>"
+			set userdata = users(userId)
+			write "<tr>"
+			write "<td>"_userdata.id_"</td>"
+			write "<td>"_userdata.name_"</td>"
+			write "<td>"_userdata.age_"</td>"
+			write "<td>"_userdata.companyname_"</td>"
+			write "<td/>"
 			write "</tr>"
 		}
 	} while userId
@@ -126,8 +130,8 @@ ClassMethod displayUsersHtml(users)
 	&HTML<
 		</tbody>
 		</table>
-		</div>
-		</div>
+		
+		
 		</div>
 		
 
