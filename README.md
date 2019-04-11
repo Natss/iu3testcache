@@ -85,3 +85,6 @@ function parseResponse(response){
 ```bash
 MacBook:intersystems nats$ ./cstop
 ```
+# Полезные ссылки
+
+- [Документация](http://127.0.0.1:57772/csp/docbook/DocBook.UI.Page.cls)

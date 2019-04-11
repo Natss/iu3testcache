@@ -157,6 +157,7 @@ ClassMethod saveAsInsert()
 	set salary = %request.Get("salaryField")
 	set department = %request.Get("departmentField")
 	set workfrom = %request.Get("workfromField")
+	set companyName = %request.Get("companyField")
 
 	try {
 		set workfromHorolog = $ZDATEH(workfrom, 3)
@@ -165,9 +166,16 @@ ClassMethod saveAsInsert()
 		set workfromHorolog = $HOROLOG 
 	} 
 	
-	&sql(insert into Company.Employee (name, age, sex, salary, department, workfrom) 
-	VALUES (:name, :age, :sex, :salary, :department, :workfromHorolog))
+	&sql(insert into Company.Company (name)
+	VALUES (:companyName))
+
+	set companyId = %ROWID
+
+	&sql(insert into Company.Employee (name, age, sex, salary, department, workfrom, company) 
+	VALUES (:name, :age, :sex, :salary, :department, :workfromHorolog, :companyId))
 	
+	
+
 	if (%ROWCOUNT = 0) {
 		set result = %msg
 	}
@@ -219,6 +227,11 @@ ClassMethod displayForm()
 		<div class="form-group">
 			<label for="workfromField">User workfrom
 			</label><input type="date" name="workfromField" class="form-control">
+		</div>
+
+		<div class="form-group">
+			<label for="companyField">User company
+			</label><input type="text" name="companyField" class="form-control">
 		</div>
 		
 		<button type="submit" class="btn btn-primary">Сохранить</button>
