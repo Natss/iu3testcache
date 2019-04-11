@@ -10,6 +10,10 @@ Property sex As %Integer(MAXVAL = 5) [ Required ];
 
 Property company As Company.Company [ InitialExpression = 1 ];
 
+Property version As %Integer [ InitialExpression = 0 ];
+
+Parameter VERSIONPROPERTY = "version";
+
 Storage Default
 {
 <Data name="UsersDefaultData">
@@ -27,6 +31,9 @@ Storage Default
 </Value>
 <Value name="5">
 <Value>company</Value>
+</Value>
+<Value name="6">
+<Value>version</Value>
 </Value>
 </Data>
 <DataLocation>^Company.UsersD</DataLocation>

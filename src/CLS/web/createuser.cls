@@ -97,7 +97,7 @@ ClassMethod displayUsersHtml(users)
 		<div class="card-header">Users</div>
 		<div class="card-body">
 		<div class="form-group input-group">
-			<input type="text" id="username" class="form-control" placeholder="User name">
+			<input type="text" id="username" class="form-control" placeholder="User name" style="margin-right: 1em">
 			<button class="btn btn-primary" onclick="request()">Request data</button>
 		</div>
 		<table border=1 cellpadding=7 cellspacing=7 style="width: 100%">
@@ -122,7 +122,7 @@ ClassMethod displayUsersHtml(users)
 			write "<td>"_userdata.name_"</td>"
 			write "<td>"_userdata.age_"</td>"
 			write "<td>"_userdata.companyname_"</td>"
-			write "<td/>"
+			write "<td>&nbsp;</td>"
 			write "</tr>"
 		}
 	} while userId
@@ -140,31 +140,41 @@ ClassMethod displayUsersHtml(users)
 
 ClassMethod saveObject()
 {
- set name = %request.Get("nameField")
- set sex = %request.Get("sexField")
- set age = %request.Get("ageField")
+	set name = %request.Get("nameField")
+	set sex = %request.Get("sexField")
+	set age = %request.Get("ageField")
 
- set userObject = ##class(Company.Users).%New()
- set result = userObject.createUser(name, age, sex)
- return result
+	set userObject = ##class(Company.Users).%New()
+	set result = userObject.createUser(name, age, sex)
+	return result
 }
 
 ClassMethod saveAsInsert()
 {
-	 set name = %request.Get("nameField")
-	 set sex = %request.Get("sexField")
-	 set age = %request.Get("ageField")
-	 
-	 &sql(insert into Company.Users (name, age, sex) 
-	 	VALUES (:name, :age, :sex))
-	 
-	 if (%ROWCOUNT = 0) {
-		 set result = %msg
-	 }
-	 else {
-		 set result = 1
-	 }
-	 return result
+	set name = %request.Get("nameField")
+	set sex = %request.Get("sexField")
+	set age = %request.Get("ageField")
+	set salary = %request.Get("salaryField")
+	set department = %request.Get("departmentField")
+	set workfrom = %request.Get("workfromField")
+
+	try {
+		set workfromHorolog = $ZDATEH(workfrom, 3)
+	}
+	catch {
+		set workfromHorolog = $HOROLOG 
+	} 
+	
+	&sql(insert into Company.Employee (name, age, sex, salary, department, workfrom) 
+	VALUES (:name, :age, :sex, :salary, :department, :workfromHorolog))
+	
+	if (%ROWCOUNT = 0) {
+		set result = %msg
+	}
+	else {
+		set result = 1
+	}
+	return result
 }
 
 ClassMethod displayForm()
@@ -185,7 +195,7 @@ ClassMethod displayForm()
 		
 		<div class="form-group">
 			<label for="ageField">User age
-			</label><input type="text" name="ageField" class="form-control">
+			</label><input type="number" name="ageField" class="form-control">
 		</div>
 		
 		<div class="form-group">
@@ -194,6 +204,21 @@ ClassMethod displayForm()
 				<option value="1">Unknown</option>
 				<option value="2">Known but secret</option>
 			</select>
+		</div>
+
+		<div class="form-group">
+			<label for="salaryField">User salary
+			</label><input type="number" name="salaryField" class="form-control">
+		</div>
+
+		<div class="form-group">
+			<label for="departmentField">User department
+			</label><input type="text" name="departmentField" class="form-control">
+		</div>
+
+		<div class="form-group">
+			<label for="workfromField">User workfrom
+			</label><input type="date" name="workfromField" class="form-control">
 		</div>
 		
 		<button type="submit" class="btn btn-primary">Сохранить</button>
