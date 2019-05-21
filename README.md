@@ -34,7 +34,7 @@
 
 # Где лежит `js`
 
-Путь можно посмотреть в визуальном [интерфейсе](http://127.0.0.1:57772/csp/sys/sec/%25CSP.UI.Portal.Applications.Web.zen?PID=%2Fcsp%2Fuser) в поле `Физический путь к CSP-файлам` 
+Путь можно посмотреть в визуальном [интерфейсе](http://127.0.0.1:57772/csp/sys/sec/%25CSP.UI.Portal.Applications.Web.zen?PID=%2Fcsp%2Fuser) в поле `Администрирование системы -> Безопасность -> Приложения -> Веб-приложения -> csp/user -> Физический путь к CSP-файлам` 
 
 У меня лежит в `/Users/nats/intersystems/csp/user/js`
 
@@ -72,6 +72,7 @@ function parseResponse(response){
 			<td>${userdata.name}</td>
 			<td>${userdata.age}</td>
 			<td>${userdata.companyname}</td>
+			<td>&nbsp;</td>
 			</tr>`;
 	});
 	usersTable.innerHTML = innerHtml;
@@ -88,3 +89,17 @@ MacBook:intersystems nats$ ./cstop
 # Полезные ссылки
 
 - [Документация](http://127.0.0.1:57772/csp/docbook/DocBook.UI.Page.cls)
+
+# vk guide
+
+Наше приложение `kouzma`: 6951247
+
+URL авторизации
+https://oauth.vk.com/authorize?client_id=6951247&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.52
+
+token
+
+8c68b2ba4dc976ec58f6f955f0346c8c609089bb0efd5fabd9d51caaa04e90363cbd9a97c0cdb40aa266a
+## Создать SSL конфиг
+
+в поле `Администрирование системы -> Безопасность -> SSL-конфигурации -> Добавить конфигурацию`
